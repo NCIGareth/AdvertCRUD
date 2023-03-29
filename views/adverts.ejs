@@ -1,0 +1,33 @@
+<%- include("_header") -%>
+
+<h1>Current Adverts (<%= model.length %>)</h1>
+
+<div class="table-responsive-sm">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th class="d-print-none">
+          <a class="btn btn-sm btn-success" href="/create">Add</a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const adverts of model) { %>
+        <tr>
+          <td><%= adverts.Title %></td>
+          <td><%= adverts.Price %></td>
+          <td><%= adverts.Description %></td>
+          <td class="d-print-none">
+            <a class="btn btn-sm btn-warning" href="/edit/<%= adverts.ITEM_ID %>">Edit</a>
+            <a class="btn btn-sm btn-danger" href="/delete/<%= adverts.ITEM_ID %>">Delete</a>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("_footer") -%>
