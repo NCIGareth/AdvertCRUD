@@ -1,4 +1,6 @@
 // Project Setup
+const https = require("https");
+const fs = require("fs");
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -45,7 +47,17 @@ db.run(sql_create, err => {
 
 // Server
 const port = process.env.PORT;
-app.listen(port, () => console.log(`Application Running on Port ${port}`));
+https
+  .createServer(
+		// Provide the private and public key to the server by reading each
+		// file's content with the readFileSync() method.
+    {
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(port, () => console.log(`Application Running on Port ${port}`));
 
 app.get("/", (req, res) => {
   res.redirect("/adverts");
@@ -93,7 +105,7 @@ app.post("/edit/:id", (req, res) => {
     return res.status(400).send("Please provide a description that is at least 10 characters long");
   }
   const id = req.params.id;
-  const adverts = [title, price, description];
+  const adverts = [title, price, description, id];
   const sql = "UPDATE adverts SET Title = ?, Price = ?, Description = ? WHERE (ITEM_ID = ?)";
   db.run(sql, adverts, err => {
     if (err) {
